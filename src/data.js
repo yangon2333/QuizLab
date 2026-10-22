@@ -1,80 +1,81 @@
 // 页面用的初始数据，直接写在前端，没有接后端接口
-export const categories = ['HTML/CSS', 'JavaScript', 'Vue', '计算机网络', '数据库']
+export const categories = ['计算机基础', '操作系统', '办公软件', '网络常识']
 
 export const difficulties = ['简单', '中等', '困难']
 
 export const questionList = [
   {
     id: 1,
-    stem: 'HTTP 协议默认使用的端口号是多少？',
-    category: '计算机网络',
-    options: ['21', '80', '443', '8080'],
+    stem: '计算机中 1 KB 等于多少字节？',
+    category: '计算机基础',
+    options: ['100', '1024', '512', '2048'],
     answer: 'B',
     difficulty: '简单'
   },
   {
     id: 2,
-    stem: 'HTML 中用来定义无序列表的标签是哪一个？',
-    category: 'HTML/CSS',
-    options: ['<ol>', '<ul>', '<dl>', '<li>'],
+    stem: '下列哪个属于操作系统？',
+    category: '操作系统',
+    options: ['Word', 'Windows', 'Excel', 'Chrome'],
     answer: 'B',
     difficulty: '简单'
   },
   {
     id: 3,
-    stem: 'CSS 里设置元素内边距的属性是？',
-    category: 'HTML/CSS',
-    options: ['margin', 'padding', 'border', 'outline'],
-    answer: 'B',
-    difficulty: '简单'
-  },
-  {
-    id: 4,
-    stem: '下面哪个不是 JavaScript 的基本数据类型？',
-    category: 'JavaScript',
-    options: ['string', 'number', 'array', 'boolean'],
+    stem: '二进制数 1101 转换成十进制是多少？',
+    category: '计算机基础',
+    options: ['11', '12', '13', '14'],
     answer: 'C',
     difficulty: '中等'
   },
   {
+    id: 4,
+    stem: '电子邮件地址中必须包含的符号是？',
+    category: '网络常识',
+    options: ['#', '@', '&', '%'],
+    answer: 'B',
+    difficulty: '简单'
+  },
+  {
     id: 5,
-    stem: 'Vue 3 中声明基本类型响应式数据用哪个 API？',
-    category: 'Vue',
-    options: ['ref', 'reactive', 'computed', 'watch'],
-    answer: 'A',
-    difficulty: '中等'
+    stem: '下列哪个不是输入设备？',
+    category: '计算机基础',
+    options: ['键盘', '鼠标', '显示器', '扫描仪'],
+    answer: 'C',
+    difficulty: '简单'
   },
   {
     id: 6,
-    stem: '数据库事务 ACID 中的 A 指的是原子性。',
-    category: '数据库',
-    options: ['对', '错', '不确定', '以上都不对'],
-    answer: 'A',
-    difficulty: '中等'
+    stem: '一个字节（Byte）由多少位（bit）组成？',
+    category: '计算机基础',
+    options: ['4', '8', '16', '32'],
+    answer: 'B',
+    difficulty: '简单'
   },
   {
     id: 7,
-    stem: 'Git 中创建并切换到新分支的命令是？',
-    category: 'JavaScript',
-    options: ['git branch -d', 'git checkout -b', 'git merge', 'git remote -v'],
-    answer: 'B',
+    stem: 'Word 中把选中的文字加粗，快捷键是？',
+    category: '办公软件',
+    options: ['Ctrl + B', 'Ctrl + C', 'Ctrl + V', 'Ctrl + Z'],
+    answer: 'A',
     difficulty: '中等'
   },
   {
     id: 8,
-    stem: 'HTTP 状态码 404 表示请求的资源不存在。',
-    category: '计算机网络',
+    stem: '显示器属于输出设备。',
+    category: '计算机基础',
     options: ['对', '错', '不确定', '以上都不对'],
     answer: 'A',
-    difficulty: '简单'
+    difficulty: '中等'
   }
 ]
 
 export const userList = [
-  { id: 1, name: '张子炀', account: 'admin', role: '管理员', date: '2024-03-11' },
-  { id: 2, name: '李明轩', account: 'limingxuan', role: '普通用户', date: '2024-03-12' },
-  { id: 3, name: '王雨桐', account: 'wangyutong', role: '普通用户', date: '2024-03-15' },
-  { id: 4, name: '陈嘉豪', account: 'chenjiahao', role: '普通用户', date: '2024-03-18' },
-  { id: 5, name: '赵欣怡', account: 'zhaoxinyi', role: '普通用户', date: '2024-03-21' },
-  { id: 6, name: '刘思远', account: 'liusiyuan', role: '普通用户', date: '2024-03-25' }
+  { id: 1, name: '张子炀', account: 'admin', role: '管理员', email: 'zhangziyang@quiz.cn', date: '2024-03-11' },
+  { id: 2, name: '王浩然', account: 'wanghaoran', role: '教师', email: 'wanghaoran@quiz.cn', date: '2024-03-14' },
+  { id: 3, name: '李思颖', account: 'lisiying', role: '教师', email: 'lisiying@quiz.cn', date: '2024-03-17' },
+  { id: 4, name: '陈子轩', account: 'chenzixuan', role: '学生', email: 'chenzixuan@quiz.cn', date: '2024-03-20' },
+  { id: 5, name: '刘雨晴', account: 'liuyuqing', role: '学生', email: 'liuyuqing@quiz.cn', date: '2024-03-23' },
+  { id: 6, name: '孙文杰', account: 'sunwenjie', role: '学生', email: 'sunwenjie@quiz.cn', date: '2024-03-27' },
+  { id: 7, name: '周若彤', account: 'zhouruotong', role: '学生', email: 'zhouruotong@quiz.cn', date: '2024-04-02' }
 ]

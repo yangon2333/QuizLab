@@ -1,40 +1,50 @@
 <template>
   <base-layout>
     <el-card shadow="never">
-      <el-form :inline="true">
+      <el-form :inline="true" class="filter">
+        <el-form-item label="分类">
+          <el-select v-model="category" placeholder="全部分类" clearable style="width: 130px">
+            <el-option v-for="item in categories" :key="item" :label="item" :value="item"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="难度">
+          <el-select v-model="difficulty" placeholder="全部难度" clearable style="width: 110px">
+            <el-option v-for="item in difficulties" :key="item" :label="item" :value="item"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="题目">
-          <el-input
-            v-model="keyword"
-            placeholder="输入题干关键词"
-            clearable
-            style="width: 220px"
-            @keyup.enter="search"
-          ></el-input>
+          <el-input v-model="keyword" placeholder="输入题干关键词" clearable style="width: 180px" @keyup.enter="search"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="search">查询</el-button>
           <el-button @click="reset">重置</el-button>
-          <el-button type="success" @click="openAdd">添加题目</el-button>
+          <el-button type="success" @click="openAdd">新增题目</el-button>
         </el-form-item>
       </el-form>
-    </el-card>
 
-    <el-card shadow="never" style="margin-top: 15px">
       <el-table :data="pageData" border>
-        <el-table-column prop="id" label="序号" width="70" align="center"></el-table-column>
-        <el-table-column prop="stem" label="题目" min-width="260"></el-table-column>
-        <el-table-column prop="category" label="分类" width="120"></el-table-column>
-        <el-table-column label="难度" width="90" align="center">
+        <el-table-column prop="id" label="编号" width="70" align="center"></el-table-column>
+        <el-table-column label="题目" min-width="320">
           <template #default="scope">
-            <el-tag size="small" :type="tagType(scope.row.difficulty)">
-              {{ scope.row.difficulty }}
-            </el-tag>
+            <div class="stem">{{ scope.row.stem }}</div>
+            <div class="options">
+              <span v-for="(item, index) in scope.row.options" :key="index">
+                {{ letters[index] }}. {{ item }}
+              </span>
+            </div>
           </template>
         </el-table-column>
-        <el-table-column prop="answer" label="答案" width="80" align="center"></el-table-column>
-        <el-table-column label="操作" width="150" align="center">
+        <el-table-column prop="category" label="分类" width="110"></el-table-column>
+        <el-table-column label="难度" width="80" align="center">
           <template #default="scope">
-            <el-button size="small" @click="view(scope.row)">查看</el-button>
+            <el-tag size="small" :type="tagType(scope.row.difficulty)">{{ scope.row.difficulty }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="答案" width="70" align="center">
+          <template #default="scope">{{ scope.row.answer }}</template>
+        </el-table-column>
+        <el-table-column label="操作" width="90" align="center">
+          <template #default="scope">
             <el-button size="small" type="danger" @click="remove(scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -51,16 +61,27 @@
       </el-pagination>
     </el-card>
 
-    <el-dialog title="添加题目" v-model="dialogVisible" width="520px">
-      <el-form :model="form" label-width="90px">
+    <el-dialog title="新增题目" v-model="dialogVisible" width="500px">
+      <el-form :model="form" label-width="80px">
         <el-form-item label="题干">
           <el-input v-model="form.stem" type="textarea" :rows="2"></el-input>
         </el-form-item>
-        <el-form-item label="分类">
-          <el-select v-model="form.category">
-            <el-option v-for="item in categories" :key="item" :label="item" :value="item"></el-option>
-          </el-select>
-        </el-form-item>
+        <el-row :gutter="10">
+          <el-col :span="14">
+            <el-form-item label="分类">
+              <el-select v-model="form.category">
+                <el-option v-for="item in categories" :key="item" :label="item" :value="item"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="10">
+            <el-form-item label="难度">
+              <el-select v-model="form.difficulty">
+                <el-option v-for="item in difficulties" :key="item" :label="item" :value="item"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-form-item label="选项A">
           <el-input v-model="form.optionA"></el-input>
         </el-form-item>
@@ -73,24 +94,19 @@
         <el-form-item label="选项D">
           <el-input v-model="form.optionD"></el-input>
         </el-form-item>
-        <el-form-item label="正确答案">
-          <el-radio-group v-model="form.answer">
-            <el-radio value="A">A</el-radio>
-            <el-radio value="B">B</el-radio>
-            <el-radio value="C">C</el-radio>
-            <el-radio value="D">D</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="难度">
-          <el-select v-model="form.difficulty">
-            <el-option v-for="item in difficulties" :key="item" :label="item" :value="item"></el-option>
+        <el-form-item label="答案">
+          <el-select v-model="form.answer" style="width: 120px">
+            <el-option label="A" value="A"></el-option>
+            <el-option label="B" value="B"></el-option>
+            <el-option label="C" value="C"></el-option>
+            <el-option label="D" value="D"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
 
       <template #footer>
         <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="submit">确定</el-button>
+        <el-button type="primary" @click="submit">保存</el-button>
       </template>
     </el-dialog>
   </base-layout>
@@ -107,9 +123,11 @@ export default {
     return {
       categories,
       difficulties,
+      letters: ['A', 'B', 'C', 'D'],
       list: questionList.slice(),
+      category: '',
+      difficulty: '',
       keyword: '',
-      appliedKeyword: '',
       page: 1,
       pageSize: 5,
       dialogVisible: false,
@@ -118,9 +136,12 @@ export default {
   },
   computed: {
     filtered() {
-      const key = this.appliedKeyword
-      if (!key) return this.list
-      return this.list.filter((item) => item.stem.indexOf(key) !== -1)
+      return this.list.filter((item) => {
+        if (this.category && item.category !== this.category) return false
+        if (this.difficulty && item.difficulty !== this.difficulty) return false
+        if (this.keyword && item.stem.indexOf(this.keyword) === -1) return false
+        return true
+      })
     },
     pageData() {
       const start = (this.page - 1) * this.pageSize
@@ -132,12 +153,12 @@ export default {
       return {
         stem: '',
         category: categories[0],
+        difficulty: '简单',
         optionA: '',
         optionB: '',
         optionC: '',
         optionD: '',
-        answer: 'A',
-        difficulty: '简单'
+        answer: 'A'
       }
     },
     tagType(level) {
@@ -146,12 +167,12 @@ export default {
       return 'danger'
     },
     search() {
-      this.appliedKeyword = this.keyword.trim()
       this.page = 1
     },
     reset() {
+      this.category = ''
+      this.difficulty = ''
       this.keyword = ''
-      this.appliedKeyword = ''
       this.page = 1
     },
     openAdd() {
@@ -183,15 +204,7 @@ export default {
       })
       this.dialogVisible = false
       this.page = 1
-      this.$message.success('添加成功')
-    },
-    view(row) {
-      this.$alert(
-        'A. ' + row.options[0] + '\nB. ' + row.options[1] +
-        '\nC. ' + row.options[2] + '\nD. ' + row.options[3],
-        row.stem,
-        { confirmButtonText: '关闭' }
-      )
+      this.$message.success('保存成功')
     },
     remove(row) {
       this.$confirm('确定删除这道题目吗？', '提示', { type: 'warning' })
@@ -209,6 +222,25 @@ export default {
 </script>
 
 <style scoped>
+.filter :deep(.el-form-item) {
+  margin-bottom: 12px;
+  margin-right: 12px;
+}
+
+.stem {
+  line-height: 1.6;
+}
+
+.options {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #909399;
+}
+
+.options span {
+  margin-right: 14px;
+}
+
 .pager {
   margin-top: 15px;
   text-align: right;
