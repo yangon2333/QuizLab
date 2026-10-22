@@ -1,12 +1,26 @@
 <template>
   <base-layout>
     <el-card shadow="never">
+      <div class="cats">
+        <span
+          class="cat"
+          :class="{ on: category === '' }"
+          @click="changeCategory('')"
+        >
+          全部（{{ list.length }}）
+        </span>
+        <span
+          v-for="item in categoryCounts"
+          :key="item.name"
+          class="cat"
+          :class="{ on: category === item.name }"
+          @click="changeCategory(item.name)"
+        >
+          {{ item.name }}（{{ item.count }}）
+        </span>
+      </div>
+
       <el-form :inline="true" class="filter">
-        <el-form-item label="分类">
-          <el-select v-model="category" placeholder="全部分类" clearable style="width: 130px">
-            <el-option v-for="item in categories" :key="item" :label="item" :value="item"></el-option>
-          </el-select>
-        </el-form-item>
         <el-form-item label="难度">
           <el-select v-model="difficulty" placeholder="全部难度" clearable style="width: 110px">
             <el-option v-for="item in difficulties" :key="item" :label="item" :value="item"></el-option>
@@ -24,13 +38,16 @@
 
       <el-table :data="pageData" border>
         <el-table-column prop="id" label="编号" width="70" align="center"></el-table-column>
-        <el-table-column label="题目" min-width="320">
+        <el-table-column prop="stem" label="题目" min-width="240"></el-table-column>
+        <el-table-column label="选项" width="200">
           <template #default="scope">
-            <div class="stem">{{ scope.row.stem }}</div>
-            <div class="options">
-              <span v-for="(item, index) in scope.row.options" :key="index">
-                {{ letters[index] }}. {{ item }}
-              </span>
+            <div
+              v-for="(item, index) in scope.row.options"
+              :key="index"
+              class="option"
+              :class="{ right: letters[index] === scope.row.answer }"
+            >
+              {{ letters[index] }}. {{ item }}
             </div>
           </template>
         </el-table-column>
@@ -135,6 +152,14 @@ export default {
     }
   },
   computed: {
+    categoryCounts() {
+      return this.categories.map((name) => {
+        return {
+          name: name,
+          count: this.list.filter((item) => item.category === name).length
+        }
+      })
+    },
     filtered() {
       return this.list.filter((item) => {
         if (this.category && item.category !== this.category) return false
@@ -166,6 +191,10 @@ export default {
       if (level === '中等') return 'warning'
       return 'danger'
     },
+    changeCategory(name) {
+      this.category = name
+      this.page = 1
+    },
     search() {
       this.page = 1
     },
@@ -177,6 +206,7 @@ export default {
     },
     openAdd() {
       this.form = this.createForm()
+      if (this.category) this.form.category = this.category
       this.dialogVisible = true
     },
     submit() {
@@ -203,6 +233,7 @@ export default {
         difficulty: this.form.difficulty
       })
       this.dialogVisible = false
+      this.category = this.form.category
       this.page = 1
       this.$message.success('保存成功')
     },
@@ -222,23 +253,44 @@ export default {
 </script>
 
 <style scoped>
+.cats {
+  border-bottom: 1px solid #e4e7ed;
+  margin-bottom: 15px;
+}
+
+.cat {
+  display: inline-block;
+  padding: 0 16px 10px;
+  margin-right: 6px;
+  margin-bottom: -1px;
+  border-bottom: 2px solid transparent;
+  font-size: 14px;
+  color: #606266;
+  cursor: pointer;
+}
+
+.cat:hover {
+  color: #409eff;
+}
+
+.cat.on {
+  color: #409eff;
+  border-bottom-color: #409eff;
+}
+
 .filter :deep(.el-form-item) {
   margin-bottom: 12px;
   margin-right: 12px;
 }
 
-.stem {
-  line-height: 1.6;
+.option {
+  font-size: 13px;
+  line-height: 1.7;
+  color: #606266;
 }
 
-.options {
-  margin-top: 4px;
-  font-size: 12px;
-  color: #909399;
-}
-
-.options span {
-  margin-right: 14px;
+.option.right {
+  color: #67c23a;
 }
 
 .pager {
