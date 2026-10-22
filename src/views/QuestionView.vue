@@ -36,22 +36,28 @@
         </el-form-item>
       </el-form>
 
-      <el-table :data="pageData" border>
+      <el-table :data="pageData" border stripe>
         <el-table-column prop="id" label="编号" width="70" align="center"></el-table-column>
-        <el-table-column prop="stem" label="题目" min-width="240"></el-table-column>
-        <el-table-column label="选项" width="200">
+        <el-table-column prop="stem" label="题目" min-width="200"></el-table-column>
+        <el-table-column label="选项" width="330">
           <template #default="scope">
-            <div
-              v-for="(item, index) in scope.row.options"
-              :key="index"
-              class="option"
-              :class="{ right: letters[index] === scope.row.answer }"
-            >
-              {{ letters[index] }}. {{ item }}
+            <div class="options">
+              <div
+                v-for="(item, index) in scope.row.options"
+                :key="index"
+                class="option"
+                :class="{ right: letters[index] === scope.row.answer }"
+              >
+                {{ letters[index] }}. {{ item }}
+              </div>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="category" label="分类" width="110"></el-table-column>
+        <el-table-column prop="category" label="分类" width="110">
+          <template #default="scope">
+            <el-tag size="small" type="info" effect="plain">{{ scope.row.category }}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="难度" width="80" align="center">
           <template #default="scope">
             <el-tag size="small" :type="tagType(scope.row.difficulty)">{{ scope.row.difficulty }}</el-tag>
@@ -62,7 +68,7 @@
         </el-table-column>
         <el-table-column label="操作" width="90" align="center">
           <template #default="scope">
-            <el-button size="small" type="danger" @click="remove(scope.row)">删除</el-button>
+            <el-button size="small" type="danger" plain @click="remove(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -283,10 +289,18 @@ export default {
   margin-right: 12px;
 }
 
+.options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 10px;
+  row-gap: 4px;
+}
+
 .option {
   font-size: 13px;
   line-height: 1.7;
   color: #606266;
+  word-break: break-all;
 }
 
 .option.right {
@@ -294,7 +308,7 @@ export default {
 }
 
 .pager {
-  margin-top: 15px;
-  text-align: right;
+  justify-content: flex-end;
+  margin-top: 16px;
 }
 </style>

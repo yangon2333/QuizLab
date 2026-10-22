@@ -12,5 +12,20 @@ body {
 }
 
 .el-card {
-  border-radius: 4px;
+  border: 1px solid #ebeef5;
+  border-radius: 6px;
+}
+
+.el-card__body {
+  padding: 20px;
+}
+
+.el-table th.el-table__cell {
+  background: #f7f8fa;
+  color: #4a5163;
+  font-weight: 500;
+}
+
+.el-table .el-table__cell {
+  padding: 9px 0;
 }

@@ -1,12 +1,26 @@
 <template>
   <base-layout>
     <el-card shadow="never">
+      <div class="cats">
+        <span
+          class="cat"
+          :class="{ on: role === '' }"
+          @click="changeRole('')"
+        >
+          全部（{{ list.length }}）
+        </span>
+        <span
+          v-for="item in roleCounts"
+          :key="item.name"
+          class="cat"
+          :class="{ on: role === item.name }"
+          @click="changeRole(item.name)"
+        >
+          {{ item.name }}（{{ item.count }}）
+        </span>
+      </div>
+
       <el-form :inline="true" class="filter">
-        <el-form-item label="角色">
-          <el-select v-model="role" placeholder="全部角色" clearable style="width: 120px">
-            <el-option v-for="item in roles" :key="item" :label="item" :value="item"></el-option>
-          </el-select>
-        </el-form-item>
         <el-form-item label="关键词">
           <el-input v-model="keyword" placeholder="用户名或登录账号" clearable style="width: 180px" @keyup.enter="search"></el-input>
         </el-form-item>
@@ -17,7 +31,7 @@
         </el-form-item>
       </el-form>
 
-      <el-table :data="pageData" border>
+      <el-table :data="pageData" border stripe>
         <el-table-column prop="id" label="编号" width="70" align="center"></el-table-column>
         <el-table-column prop="name" label="用户名" width="120"></el-table-column>
         <el-table-column prop="account" label="登录账号" width="140"></el-table-column>
@@ -26,11 +40,11 @@
             <el-tag size="small" :type="tagType(scope.row.role)">{{ scope.row.role }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="email" label="邮箱" min-width="180"></el-table-column>
-        <el-table-column prop="date" label="注册日期" width="130"></el-table-column>
+        <el-table-column prop="email" label="邮箱" min-width="200"></el-table-column>
+        <el-table-column prop="date" label="注册日期" width="140"></el-table-column>
         <el-table-column label="操作" width="90" align="center">
           <template #default="scope">
-            <el-button size="small" type="danger" @click="remove(scope.row)">删除</el-button>
+            <el-button size="small" type="danger" plain @click="remove(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -95,6 +109,14 @@ export default {
     }
   },
   computed: {
+    roleCounts() {
+      return this.roles.map((name) => {
+        return {
+          name: name,
+          count: this.list.filter((item) => item.role === name).length
+        }
+      })
+    },
     filtered() {
       return this.list.filter((item) => {
         if (this.role && item.role !== this.role) return false
@@ -115,6 +137,10 @@ export default {
       if (role === '教师') return 'warning'
       return 'info'
     },
+    changeRole(name) {
+      this.role = name
+      this.page = 1
+    },
     search() {
       this.page = 1
     },
@@ -124,7 +150,7 @@ export default {
       this.page = 1
     },
     openAdd() {
-      this.form = { name: '', account: '', password: '', confirm: '', role: '学生' }
+      this.form = { name: '', account: '', password: '', confirm: '', role: this.role || '学生' }
       this.dialogVisible = true
     },
     today() {
@@ -157,6 +183,7 @@ export default {
         date: this.today()
       })
       this.dialogVisible = false
+      this.role = this.form.role
       this.page = 1
       this.$message.success('保存成功')
     },
@@ -176,13 +203,38 @@ export default {
 </script>
 
 <style scoped>
+.cats {
+  border-bottom: 1px solid #e4e7ed;
+  margin-bottom: 15px;
+}
+
+.cat {
+  display: inline-block;
+  padding: 0 16px 10px;
+  margin-right: 6px;
+  margin-bottom: -1px;
+  border-bottom: 2px solid transparent;
+  font-size: 14px;
+  color: #606266;
+  cursor: pointer;
+}
+
+.cat:hover {
+  color: #409eff;
+}
+
+.cat.on {
+  color: #409eff;
+  border-bottom-color: #409eff;
+}
+
 .filter :deep(.el-form-item) {
   margin-bottom: 12px;
   margin-right: 12px;
 }
 
 .pager {
-  margin-top: 15px;
-  text-align: right;
+  justify-content: flex-end;
+  margin-top: 16px;
 }
 </style>
