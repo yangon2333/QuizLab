@@ -2,6 +2,13 @@
 
 项目已经构建成功，`dist/` 里是可直接发布的产物。下面三种方式任选一种，**方式一最快**。
 
+> ⚠️ 必看的两条踩坑记录（已经修好，留作说明）：
+> 1. **只推根目录文件会导致构建失败**。GitHub 网页上传若只上传散文件，`src/`、`public/` 不会上去，
+>    Vite 找不到 `/src/main.js`，日志表现为 `Command "npm run build" exited with 1`。请用 `git push` 或整目录拖拽上传。
+> 2. **部署成功后打开是 Vercel 登录页**。这是项目的 Deployment Protection（Vercel Authentication）开着，
+>    在 *Project → Settings → Deployment Protection* 把 **Vercel Authentication** 设为 **Disabled**
+>    （或 *Standard Protection*），保存后域名即可公开访问。
+
 ---
 
 ## 方式一：网页端拖拽上传（不需要 Git，最省事）
